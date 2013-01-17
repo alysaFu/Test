@@ -9,7 +9,6 @@ import weibo4j.util.WeiboConfig;
  *
  */
 public class AuthorizerImpl implements IAuthorizer{
-
 	
 	public boolean authorize() {
 		
