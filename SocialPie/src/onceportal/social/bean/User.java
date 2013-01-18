@@ -9,7 +9,21 @@ public class User {
 	private Integer id;
 	private String name;
 	private String password;
+	private String accessToken;
+	private String expireDate;
 	
+	public String getExpireDate() {
+		return expireDate;
+	}
+	public void setExpireDate(String expireDate) {
+		this.expireDate = expireDate;
+	}
+	public String getAccessToken() {
+		return accessToken;
+	}
+	public void setAccessToken(String accessToken) {
+		this.accessToken = accessToken;
+	}
 	public Integer getId() {
 		return id;
 	}

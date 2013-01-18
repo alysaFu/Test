@@ -21,6 +21,6 @@
 	</servlet-mapping>
 	<servlet-mapping>
 		<servlet-name>OAuthServlet</servlet-name>
-		<url-pattern>/Authorize</url-pattern>
+		<url-pattern>/AuthorizeServlet</url-pattern>
 	</servlet-mapping>
 </web-app>

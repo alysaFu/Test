@@ -34,12 +34,12 @@ public class UserDAO {
 	 * @param User
 	 * @throws Exception
 	 */
-	public static int save(User User) throws Exception {
+	public static int save(User user) throws Exception {
 
-		String sql = "UPDATE tb_User SET name = ?, password = ? WHERE id = ? ";
-
-		return DbManager.executeUpdate(sql, User.getName(), User.getPassword(),
-				User.getId());
+		String sql = "UPDATE tb_User SET name = ?," +
+				" password = ? access_token = ? expire_date = ? WHERE id = ? ";
+		return DbManager.executeUpdate(sql, user.getName(), user.getPassword(),
+				user.getAccessToken(), user.getExpireDate(), user.getId());
 	}
 
 	/**
@@ -83,6 +83,9 @@ public class UserDAO {
 				User user = new User();
 				user.setId(rs.getInt("id"));
 				user.setName(rs.getString("name"));
+				user.setPassword(rs.getString("password"));
+				user.setAccessToken(rs.getString("access_token"));
+				user.setExpireDate(rs.getString("expire_date"));
 				return user;
 			} else {
 				return null;
@@ -97,7 +100,7 @@ public class UserDAO {
 				conn.close();
 		}
 	}
-
+	
 	/**
 	 * 列出所有的 User
 	 * 
@@ -124,6 +127,9 @@ public class UserDAO {
 				User User = new User();
 				User.setId(rs.getInt("id"));
 				User.setName(rs.getString("name"));
+				User.setPassword(rs.getString("password"));
+				User.setAccessToken(rs.getString("access_token"));
+				User.setExpireDate(rs.getString("expire_date"));
 
 				list.add(User);
 			}

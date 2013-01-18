@@ -8,5 +8,7 @@ create table tb_user (
 	id integer auto_increment comment 'id',
 	name varchar(255) comment '用户名',
 	password varchar(255) comment '密码',
+	access_token varchar(255) comment '微博accessToken'
+	expire_date varchar(255) comment 'token过期时间'
 	primary key (id)
 )

@@ -1,6 +1,8 @@
 package onceportal.social.servlet;
 
 import java.io.IOException;
+
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -53,8 +55,11 @@ public class LoginServlet extends HttpServlet {
 					return;
 				}
 				else {
-					request.getRequestDispatcher("/AuthorizeServlet")
-					.forward(request, response);
+					//用户名和密码正确，转入OAuth验证Servlet
+					request.setAttribute("mode", "login");
+					request.setAttribute("user", user);
+					ServletContext context= getServletContext();
+					context.getRequestDispatcher("/AuthorizeServlet").forward(request, response);
 				}
 			} catch(Exception e) {
 				throw new ServletException("Exception in UserDAO.");

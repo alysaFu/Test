@@ -1,12 +1,23 @@
 package onceportal.social.servlet;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Enumeration;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import onceportal.social.bean.User;
+
+import weibo4j.Oauth;
+import weibo4j.http.AccessToken;
+import weibo4j.model.WeiboException;
 
 /**
  * 读取config.properties中的accessToken,若没有则进行新浪微博OAuth2.0授权验证
@@ -25,16 +36,79 @@ public class OAuthServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doGet(HttpServletRequest request
+			, HttpServletResponse response)
+					throws ServletException, IOException {
 		// TODO Auto-generated method stub
+
+		//检查传入模式。若存在user参数则为登入验证模式；若存在expire参数则为过期
+		//验证方式；若存在code则为OAuth回调模式
+		String mode = (String)request.getAttribute("mode");
+		if(mode!=null && !mode.isEmpty()) {
+			if("login".equals(mode)) {
+				processLogin(request, response);
+			}
+			else if("expire".equals(mode)) {
+				
+			}
+			else {
+				request.getSession().setAttribute("error", "验证模块参数不合法。");
+				request.getRequestDispatcher("/jsp/errorHandler.jsp")
+				.forward(request, response);
+			}
+		} 
+		else {
+			callbackByCode(request, response);
+		}
+	}
+	
+	/**
+	 * 接收新浪微博OAuth平台的回调
+	 * @param request
+	 * @param response
+	 */
+	private void callbackByCode(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException{
+		String code = request.getParameter("code");
+		if(code!=null && !code.isEmpty()) {
+			Oauth oauth = new Oauth();
+			try {
+				AccessToken accessToken = oauth.getAccessTokenByCode(code);
+				
+			}
+			catch(WeiboException e) {
+				throw new ServletException(e.toString());
+			}
+		}
 		
+	}
+	
+	/**
+	 * 处理用户登录，首先查看tb_user中是否有accessToken，没有或者过期则获取
+	 * @param request
+	 * @param response
+	 */
+	private void processLogin(HttpServletRequest request, HttpServletResponse response) {
+		User user = (User)request.getAttribute("user");
+		if(user.getAccessToken()!=null && user.getExpireDate()!=null) {
+			//验证AccessToken是否过期
+			Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT+8"));
+			
+//			long vilidTime = user.get 
+//			if(user.getExpireDate())
+		}
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+			throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		this.doGet(request, response);
 	}
-
+	
+	protected String getAccessToken(String userName) {
+		return null;
+	}
 }
