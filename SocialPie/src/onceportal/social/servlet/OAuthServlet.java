@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import onceportal.social.bean.User;
+import onceportal.social.dao.UserDAO;
 
 import weibo4j.Oauth;
 import weibo4j.http.AccessToken;
@@ -49,7 +50,7 @@ public class OAuthServlet extends HttpServlet {
 				processLogin(request, response);
 			}
 			else if("expire".equals(mode)) {
-				
+				refreshToken(response);
 			}
 			else {
 				request.getSession().setAttribute("error", "验证模块参数不合法。");
@@ -59,6 +60,38 @@ public class OAuthServlet extends HttpServlet {
 		} 
 		else {
 			callbackByCode(request, response);
+		}
+	}
+
+	/**
+	 * 处理用户登录，首先查看tb_user中是否有accessToken，没有或者过期则获取
+	 * @param request
+	 * @param response
+	 */
+	private void processLogin(HttpServletRequest request, HttpServletResponse response) {
+		refreshToken(response);
+	}
+	
+	private void refreshToken(HttpServletResponse response) {
+		Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT+8"));
+		User user = (User)this.getServletContext().getAttribute("currentUser");
+		if(user.getAccessToken()!=null && user.getExpireDate()!=null) {
+			//验证AccessToken是否过期
+			long expireDate = Long.parseLong(user.getExpireDate());
+			if(expireDate < cal.getTimeInMillis()) {	//Token已过期
+				oauthValidation(response);
+			}
+//			long vilidTime = user.get 
+//			if(user.getExpireDate())
+			try {
+				response.sendRedirect(this.getServletContext().getContextPath()+"/MainServlet");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		else {
+			oauthValidation(response);
 		}
 	}
 	
@@ -73,29 +106,43 @@ public class OAuthServlet extends HttpServlet {
 		if(code!=null && !code.isEmpty()) {
 			Oauth oauth = new Oauth();
 			try {
+				Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT+8"));
 				AccessToken accessToken = oauth.getAccessTokenByCode(code);
-				
+				Long expireDate = cal.getTimeInMillis()+Long.parseLong(accessToken.getExpireIn());
+				User user = (User)this.getServletContext().getAttribute("user");
+				user.setAccessToken(accessToken.getAccessToken());
+				user.setExpireDate(expireDate.toString());
+				try {
+					UserDAO.save(user);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.println(accessToken);
 			}
 			catch(WeiboException e) {
 				throw new ServletException(e.toString());
+			}
+			try {
+				response.sendRedirect("/MainServlet");
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		
 	}
 	
-	/**
-	 * 处理用户登录，首先查看tb_user中是否有accessToken，没有或者过期则获取
-	 * @param request
-	 * @param response
-	 */
-	private void processLogin(HttpServletRequest request, HttpServletResponse response) {
-		User user = (User)request.getAttribute("user");
-		if(user.getAccessToken()!=null && user.getExpireDate()!=null) {
-			//验证AccessToken是否过期
-			Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT+8"));
-			
-//			long vilidTime = user.get 
-//			if(user.getExpireDate())
+	private void oauthValidation(HttpServletResponse response) {
+		Oauth oauth = new Oauth();
+		try {
+			response.sendRedirect(oauth.authorize("code"));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (WeiboException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -107,8 +154,5 @@ public class OAuthServlet extends HttpServlet {
 		// TODO Auto-generated method stub
 		this.doGet(request, response);
 	}
-	
-	protected String getAccessToken(String userName) {
-		return null;
-	}
+
 }
