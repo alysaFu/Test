@@ -49,8 +49,7 @@ public class LoginServlet extends HttpServlet {
 				if(user == null || !request.getParameter("password")
 						.equals(user.getPassword())) {
 					HttpSession session = request.getSession();
-					session
-					.setAttribute("Error", "您输入的用户名和密码不正确。");
+					session.setAttribute("Error", "您输入的用户名和密码不正确。");
 					doGet(request, response);
 					return;
 				}
@@ -61,6 +60,8 @@ public class LoginServlet extends HttpServlet {
 					
 					context.setAttribute("currentUser", user);	//将当前用户存为程序全局变量
 					
+//					response.sendRedirect(request.getContextPath()
+//							+"/AuthorizeServlet"+"?mode=login");
 					context.getRequestDispatcher("/AuthorizeServlet").forward(request, response);
 				}
 			} catch(Exception e) {

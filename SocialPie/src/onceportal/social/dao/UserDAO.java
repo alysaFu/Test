@@ -23,9 +23,14 @@ public class UserDAO {
 	 */
 	public static int insert(User User) throws Exception {
 
-		String sql = "INSERT INTO tb_User VALUES ( NULL, ?, ? ) ";
+		String sql = "INSERT INTO tb_User VALUES ( NULL, ?, ?, ?, ?, ? ) ";
 
-		return DbManager.executeUpdate(sql, User.getName(), User.getPassword());
+		return DbManager.executeUpdate(sql, 
+				User.getName(), 
+				User.getPassword(),
+				User.getAccessToken(),
+				User.getExpireDate(),
+				User.getUid());
 	}
 
 	/**
@@ -37,9 +42,9 @@ public class UserDAO {
 	public static int save(User user) throws Exception {
 
 		String sql = "UPDATE tb_User SET name = ?," +
-				" password = ? access_token = ? expire_date = ? WHERE id = ? ";
+				" password = ?, access_token = ?, expire_date = ?, uid = ?, since_id = ? WHERE id = ? ";
 		return DbManager.executeUpdate(sql, user.getName(), user.getPassword(),
-				user.getAccessToken(), user.getExpireDate(), user.getId());
+				user.getAccessToken(), user.getExpireDate(), user.getId(), user.getUid(), user.getSince_id());
 	}
 
 	/**
@@ -86,6 +91,8 @@ public class UserDAO {
 				user.setPassword(rs.getString("password"));
 				user.setAccessToken(rs.getString("access_token"));
 				user.setExpireDate(rs.getString("expire_date"));
+				user.setUid(rs.getLong("uid"));
+				user.setSince_id(rs.getLong("since_id"));
 				return user;
 			} else {
 				return null;
@@ -125,12 +132,15 @@ public class UserDAO {
 
 			while (rs.next()) {
 				User User = new User();
+				
 				User.setId(rs.getInt("id"));
 				User.setName(rs.getString("name"));
 				User.setPassword(rs.getString("password"));
 				User.setAccessToken(rs.getString("access_token"));
 				User.setExpireDate(rs.getString("expire_date"));
-
+				User.setUid(rs.getLong("uid"));
+				User.setSince_id(rs.getLong("since_id"));
+				
 				list.add(User);
 			}
 

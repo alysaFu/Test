@@ -80,6 +80,7 @@ public class OAuthServlet extends HttpServlet {
 			long expireDate = Long.parseLong(user.getExpireDate());
 			if(expireDate < cal.getTimeInMillis()) {	//Token已过期
 				oauthValidation(response);
+				return;
 			}
 //			long vilidTime = user.get 
 //			if(user.getExpireDate())
@@ -101,7 +102,7 @@ public class OAuthServlet extends HttpServlet {
 	 * @param response
 	 */
 	private void callbackByCode(HttpServletRequest request, HttpServletResponse response) 
-			throws ServletException{
+			throws ServletException {
 		String code = request.getParameter("code");
 		if(code!=null && !code.isEmpty()) {
 			Oauth oauth = new Oauth();
@@ -109,7 +110,7 @@ public class OAuthServlet extends HttpServlet {
 				Calendar cal = new GregorianCalendar(TimeZone.getTimeZone("GMT+8"));
 				AccessToken accessToken = oauth.getAccessTokenByCode(code);
 				Long expireDate = cal.getTimeInMillis()+Long.parseLong(accessToken.getExpireIn());
-				User user = (User)this.getServletContext().getAttribute("user");
+				User user = (User)this.getServletContext().getAttribute("currentUser");
 				user.setAccessToken(accessToken.getAccessToken());
 				user.setExpireDate(expireDate.toString());
 				try {
@@ -124,13 +125,14 @@ public class OAuthServlet extends HttpServlet {
 				throw new ServletException(e.toString());
 			}
 			try {
-				response.sendRedirect("/MainServlet");
+				response.sendRedirect(request.getContextPath()+"/MainServlet");
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-		
+		else 
+			throw new ServletException("Error occured!");
 	}
 	
 	private void oauthValidation(HttpServletResponse response) {
