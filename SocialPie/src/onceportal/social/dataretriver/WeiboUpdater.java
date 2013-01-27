@@ -16,25 +16,31 @@ import weibo4j.model.WeiboException;
 public class WeiboUpdater {
 	
 	private String access_token;
-	private String owner_uid;
+	private long owner_uid;
 	private long since_id;
 	
-	public WeiboUpdater(String access_token, String owner_uid, long since_id) {
+	public WeiboUpdater(String access_token, long owner_uid, long since_id) {
 		this.access_token = access_token;
 		this.owner_uid = owner_uid;
 		this.since_id = since_id;
 	}
 	
 	public void updateOwnerTimeline() throws Exception{
-		if(access_token == null || owner_uid == null)
+		if(access_token == null)
 			throw new Exception("Please set access_token and owner_uid in WeiboUpdater first!");
+		if(owner_uid == 0)
+			throw new Exception("owner's uid have not defined!");
 		Timeline tm = new Timeline();
 		tm.client.setToken(access_token);
+		int weiboCount=0;
 		try {
-			StatusWapper statusWarpper = tm.getFriendsTimeline(0, 0, new Paging(since_id));
+			StatusWapper statusWarpper = tm.getHomeTimeline(0, 0, new Paging(since_id));
+			System.out.println(tm.getHomeTimeline().getStatuses().get(0));
+			System.out.println(tm.getHomeTimeline(0,0,new Paging(1,200)).getStatuses().get(0));
 			for(Status s : statusWarpper.getStatuses()){
 //				Log.logInfo(s.toString());
 				System.out.println(s.toString());
+				weiboCount++;
 //				WeiboDAO.persist(s);
 			}
 			System.out.println(statusWarpper.getNextCursor());
@@ -49,7 +55,7 @@ public class WeiboUpdater {
 		this.access_token = access_token;
 	}
 
-	public void setOwner_uid(String owner_uid) {
+	public void setOwner_uid(long owner_uid) {
 		this.owner_uid = owner_uid;
 	}
 

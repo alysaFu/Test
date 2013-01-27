@@ -23,8 +23,9 @@ public class MainServlet extends HttpServlet{
 	}
 	
 	private void weiboUpdate() {
-		User owner = (User)this.getServletContext().getAttribute("user");
-		WeiboUpdater updater = 
+		User owner = (User)this.getServletContext().getAttribute("currentUser");
+		WeiboUpdater updater = new WeiboUpdater(owner.getAccessToken(), 
+				owner.getUid(), owner.getSince_id());
 	}
 	
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
@@ -33,8 +34,14 @@ public class MainServlet extends HttpServlet{
 		PrintWriter printWriter = response.getWriter();
 		printWriter.println("<h1>Hello from MainServlet</h1>");
 		
-		User owner = (User)this.getServletContext().getAttribute("user");
-		WeiboUpdater updater = new WeiboUpdater(owner.getAccessToken(), owner.getUid(), owner.getSinceId());
+		User owner = (User)this.getServletContext().getAttribute("currentUser");
+		WeiboUpdater updater = new WeiboUpdater(owner.getAccessToken(), owner.getUid(), owner.getSince_id());
+		try {
+			updater.updateOwnerTimeline();
+		}catch(Exception e) {
+			throw new ServletException(e.getMessage());
+		}
+		printWriter.println("<h1>Congratulations! update successfully!</h1>");
 	}
 	
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) 

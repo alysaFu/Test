@@ -39,12 +39,12 @@ public class UserDAO {
 	 * @param User
 	 * @throws Exception
 	 */
-	public static int save(User user) throws Exception {
+	public static int modify(User user) throws Exception {
 
 		String sql = "UPDATE tb_User SET name = ?," +
 				" password = ?, access_token = ?, expire_date = ?, uid = ?, since_id = ? WHERE id = ? ";
 		return DbManager.executeUpdate(sql, user.getName(), user.getPassword(),
-				user.getAccessToken(), user.getExpireDate(), user.getId(), user.getUid(), user.getSince_id());
+				user.getAccessToken(), user.getExpireDate(), user.getUid(), user.getSince_id(), user.getId());
 	}
 
 	/**
