@@ -114,7 +114,7 @@ public class OAuthServlet extends HttpServlet {
 				user.setAccessToken(accessToken.getAccessToken());
 				user.setExpireDate(expireDate.toString());
 				try {
-					UserDAO.save(user);
+					UserDAO.modify(user);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

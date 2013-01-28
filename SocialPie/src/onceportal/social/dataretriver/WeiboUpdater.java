@@ -32,21 +32,27 @@ public class WeiboUpdater {
 			throw new Exception("owner's uid have not defined!");
 		Timeline tm = new Timeline();
 		tm.client.setToken(access_token);
-		int weiboCount=0;
+		boolean firstFlag = true;
+		long weiboCount=0, maxWeiboCount=0;
+		int currentPage=1, weiboCountPerPage=200;
 		try {
-			StatusWapper statusWarpper = tm.getHomeTimeline(0, 0, new Paging(since_id));
-			System.out.println(tm.getHomeTimeline().getStatuses().get(0));
-			System.out.println(tm.getHomeTimeline(0,0,new Paging(1,200)).getStatuses().get(0));
-			for(Status s : statusWarpper.getStatuses()){
-//				Log.logInfo(s.toString());
-				System.out.println(s.toString());
-				weiboCount++;
-//				WeiboDAO.persist(s);
+			while (firstFlag || weiboCount < maxWeiboCount) {
+				if(firstFlag) firstFlag = false;
+				StatusWapper statusWarpper = tm.getFriendsTimeline(0, 0, new Paging(currentPage, weiboCountPerPage));
+				maxWeiboCount = statusWarpper.getTotalNumber();
+				for (Status s : statusWarpper.getStatuses()) {
+					// Log.logInfo(s.toString());
+					System.out.println(s.getText()+"\n");
+					// WeiboDAO.persist(s);
+				}
+				weiboCount += statusWarpper.getStatuses().size();
+				++currentPage;
+				System.out.println("--------------------------------------");
 			}
-			System.out.println(statusWarpper.getNextCursor());
-			System.out.println(statusWarpper.getPreviousCursor());
-			System.out.println(statusWarpper.getTotalNumber());
-			System.out.println(statusWarpper.getHasvisible());
+//			System.out.println(statusWarpper.getNextCursor());
+//			System.out.println(statusWarpper.getPreviousCursor());
+//			System.out.println(statusWarpper.getTotalNumber());
+//			System.out.println(statusWarpper.getHasvisible());
 		} catch (WeiboException e) {
 			e.printStackTrace();
 		}
