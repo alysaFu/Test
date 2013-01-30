@@ -11,6 +11,8 @@ create table tb_user (
 	password varchar(255) comment '密码',
 	access_token varchar(255) comment '微博accessToken',
 	expire_date varchar(255) comment 'token过期时间',
+	uid bigint comment '关联的微博ID',
+	since_id bigint comment '目前库中已更新的最新微博ID'
 	primary key (id)
 );
 

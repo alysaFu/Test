@@ -49,6 +49,7 @@ public class WeiboUpdater {
 				++currentPage;
 				System.out.println("--------------------------------------");
 			}
+			System.out.println("weiboCount:"+weiboCount+" page:"+currentPage+"\n");
 //			System.out.println(statusWarpper.getNextCursor());
 //			System.out.println(statusWarpper.getPreviousCursor());
 //			System.out.println(statusWarpper.getTotalNumber());
