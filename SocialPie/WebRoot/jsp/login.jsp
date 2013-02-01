@@ -10,7 +10,7 @@
 </head>
 <body>
 <jsp:include page="/jsp/header.jsp" flush="true"/>
-<form action="LoginServlet" method="post">
+<form action="<%=request.getContextPath()%>/LoginServlet" method="post">
 	用户名：<input type="text" name="user"><br>
 	密码： <input type="password" name="password"><br>
 	<%

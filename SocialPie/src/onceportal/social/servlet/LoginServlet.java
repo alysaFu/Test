@@ -57,7 +57,6 @@ public class LoginServlet extends HttpServlet {
 					//用户名和密码正确，转入OAuth验证Servlet
 					request.setAttribute("mode", "login");
 					ServletContext context= getServletContext();
-					
 					context.setAttribute("currentUser", user);	//将当前用户存为程序全局变量
 					
 //					response.sendRedirect(request.getContextPath()

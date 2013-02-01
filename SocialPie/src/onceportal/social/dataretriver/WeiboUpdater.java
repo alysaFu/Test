@@ -3,6 +3,12 @@
  */
 package onceportal.social.dataretriver;
 
+import java.util.List;
+
+import onceportal.social.bean.WeiboBean;
+import onceportal.social.bean.WeiboUser;
+import onceportal.social.dao.WeiboDAO;
+import onceportal.social.dao.WeiboUserDAO;
 import weibo4j.Timeline;
 import weibo4j.model.Paging;
 import weibo4j.model.Status;
@@ -33,8 +39,8 @@ public class WeiboUpdater {
 		Timeline tm = new Timeline();
 		tm.client.setToken(access_token);
 		boolean firstFlag = true;
-		long weiboCount=0, maxWeiboCount=0;
-		int currentPage=1, weiboCountPerPage=200;
+		long weiboCount=0, maxWeiboCount=60;
+		int currentPage=1, weiboCountPerPage=50;
 		try {
 			while (firstFlag || weiboCount < maxWeiboCount) {
 				if(firstFlag) firstFlag = false;
@@ -49,14 +55,53 @@ public class WeiboUpdater {
 				++currentPage;
 				System.out.println("--------------------------------------");
 			}
-//			System.out.println(statusWarpper.getNextCursor());
-//			System.out.println(statusWarpper.getPreviousCursor());
-//			System.out.println(statusWarpper.getTotalNumber());
-//			System.out.println(statusWarpper.getHasvisible());
 		} catch (WeiboException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	public void updateSpecificTimeline(String screen_name) throws Exception{
+		if(access_token == null)
+			throw new Exception("Please set access_token and owner_uid in WeiboUpdater first!");
+		if(owner_uid == 0)
+			throw new Exception("owner's uid have not defined!");
+		Timeline tm = new Timeline();
+		WeiboBean weibo = new WeiboBean();
+		tm.client.setToken(access_token);
+		boolean firstFlag = true;
+		long weiboCount=0, maxWeiboCount=100;
+		int currentPage=1, weiboCountPerPage=100;
+		try {
+			while (firstFlag || weiboCount < maxWeiboCount) {
+				if(firstFlag)firstFlag = false;
+				
+				StatusWapper statusWarpper = tm.getUserTimelineByName(screen_name, 
+				    		                 new Paging(currentPage, weiboCountPerPage), 0, 1);
+				for (Status s : statusWarpper.getStatuses()) {
+//					if(firstFlag){ 
+//						WeiboUserDAO.insert(s.getUser());
+//						firstFlag = false;
+//					}
+					weibo.setId(Long.parseLong(s.getId()));
+					weibo.setCreated_at(s.getCreatedAt());
+					weibo.setUser_id(Long.parseLong(s.getUser().getId()));
+					weibo.setRepost_count(s.getRepostsCount());
+					weibo.setComments_count(s.getCommentsCount());
+					weibo.setText(s.getText());
+				    WeiboDAO.insert(weibo);
+				}
+				weiboCount += statusWarpper.getStatuses().size();
+				System.out.println("getTotalNumber"+statusWarpper.getTotalNumber());
+				System.out.println("weibocount"+weiboCount);
+				++currentPage;
+				System.out.println("--------------------------------------");
+				
+			}
+		} catch (WeiboException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void setAccess_token(String access_token) {
 		this.access_token = access_token;
 	}

@@ -203,6 +203,7 @@ public class Timeline extends Weibo{
 			new PostParameter("screen_name", screen_name)
 		}));
 	}
+
 	/**
 	 * 获取某个用户最新发表的微博列表
 	 * 
