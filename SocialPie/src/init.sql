@@ -11,8 +11,8 @@ create table tb_user (
 	password varchar(255) comment '密码',
 	access_token varchar(255) comment '微博accessToken',
 	expire_date varchar(255) comment 'token过期时间',
-	uid bigint comment '关联的微博ID',
-	since_id bigint comment '目前库中已更新的最新微博ID'
+	uid long comment '用户微博ID',
+	since_id long comment '前数据库已索引到的最新微博id',
 	primary key (id)
 );
 
@@ -25,13 +25,12 @@ create table tb_s_user (
 	followers_count INT NOT NULL comment '粉丝数目',
 	followees_count INT NOT NULL comment '关注者数目',
 	status_count INT NOT NULL 	comment '微博数',
-	province TINYINT comment '所在省份',
-	city TINYINT comment '所在城市',
+	province INT comment '所在省份',
+	city INT comment '所在城市',
 	description VARCHAR(1024) comment '用户个人描述',
 	created_at DATETIME NOT NULL comment '用户注册时间',
 	primary key(id)
 );
-
 -- 定义微博内容表
 drop table if exists tb_s_weibo;
 create table tb_s_weibo (
