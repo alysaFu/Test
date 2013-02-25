@@ -259,7 +259,7 @@ public class Status extends WeiboResponse implements java.io.Serializable {
 	public void setTruncated(boolean truncated) {
 		this.truncated = truncated;
 	}
-	public static StatusWapper constructWapperStatus(Response res) throws WeiboException {
+	public static StatusWarpper constructWapperStatus(Response res) throws WeiboException {
 		JSONObject jsonStatus = res.asJSONObject(); //asJSONArray();
 		JSONArray statuses = null;
 		try {
@@ -278,7 +278,7 @@ public class Status extends WeiboResponse implements java.io.Serializable {
 			long nextCursor = jsonStatus.getLong("next_cursor");
 			long totalNumber = jsonStatus.getLong("total_number");
 			String hasvisible = jsonStatus.getString("hasvisible");
-			return new StatusWapper(status, previousCursor, nextCursor,totalNumber,hasvisible);
+			return new StatusWarpper(status, previousCursor, nextCursor,totalNumber,hasvisible);
 		} catch (JSONException jsone) {
 			throw new WeiboException(jsone);
 		}

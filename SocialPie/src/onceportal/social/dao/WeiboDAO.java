@@ -25,14 +25,20 @@ public class WeiboDAO {
 	 */
 	public static int insert(WeiboBean weibo) throws SQLException{
 
-		String sql = "INSERT INTO "+TABLE+" VALUES ( ?, ?, ?, ?, ?, ? ) ";
-		return DbManager.executeUpdate(sql, 
-				weibo.getId(),
-				weibo.getUser_id(),
-				weibo.getRepost_count(),
-				weibo.getComments_count(),
-				Parser.Dateparse(weibo.getCreated_at()),
-				weibo.getText());
+		//判断该微博在数据库中是否存在?
+		String query_sql = "SELECT count(*) FROM "+TABLE+" WHERE id="+weibo.getId();
+		if(DbManager.getCount(query_sql) == 0) {
+			String sql = "INSERT INTO "+TABLE+" VALUES ( ?, ?, ?, ?, ?, ? ) ";
+			return DbManager.executeUpdate(sql, 
+					weibo.getId(),
+					weibo.getUser_id(),
+					weibo.getRepost_count(),
+					weibo.getComments_count(),
+					Parser.Dateparse(weibo.getCreated_at()),
+					weibo.getText());
+		}
+		else 
+			return 0;
 	}
 
 	/**

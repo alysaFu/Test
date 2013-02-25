@@ -2,7 +2,9 @@ package weibo4j.model;
 
 import java.util.List;
 
-public class StatusWapper {
+public class StatusWarpper implements java.io.Serializable{
+
+	private static final long serialVersionUID = -1814697688044050475L;
 
 	private List<Status> statuses;
 
@@ -14,7 +16,7 @@ public class StatusWapper {
 	
 	private String hasvisible;
 
-	public StatusWapper(List<Status> statuses, long previousCursor,
+	public StatusWarpper(List<Status> statuses, long previousCursor,
 			long nextCursor, long totalNumber,String hasvisible) {
 		this.statuses = statuses;
 		this.previousCursor = previousCursor;

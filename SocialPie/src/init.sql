@@ -56,6 +56,7 @@ create table if NOT EXISTS tb_s_relation (
 -- drop table if exists tb_s_wordlist;
 create table if NOT EXISTS tb_s_wordlist (
 	id INT NOT NULL comment '分词id',
+	userid BIGINT NOT NULL REFERENCES tb_s_user(id),
 	word VARCHAR(32) comment '分词结果',
 	primary key(id)
 );

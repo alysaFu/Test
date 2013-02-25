@@ -3,6 +3,10 @@
  */
 package onceportal.social.dataretriver;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 import onceportal.social.bean.WeiboBean;
@@ -12,7 +16,7 @@ import onceportal.social.dao.WeiboUserDAO;
 import weibo4j.Timeline;
 import weibo4j.model.Paging;
 import weibo4j.model.Status;
-import weibo4j.model.StatusWapper;
+import weibo4j.model.StatusWarpper;
 import weibo4j.model.WeiboException;
 
 /**
@@ -44,7 +48,7 @@ public class WeiboUpdater {
 		try {
 			while (firstFlag || weiboCount < maxWeiboCount) {
 				if(firstFlag) firstFlag = false;
-				StatusWapper statusWarpper = tm.getFriendsTimeline(0, 0, new Paging(currentPage, weiboCountPerPage));
+				StatusWarpper statusWarpper = tm.getFriendsTimeline(0, 0, new Paging(currentPage, weiboCountPerPage));
 				maxWeiboCount = statusWarpper.getTotalNumber();
 				for (Status s : statusWarpper.getStatuses()) {
 					// Log.logInfo(s.toString());
@@ -71,34 +75,59 @@ public class WeiboUpdater {
 		boolean firstFlag = true;
 		long weiboCount=0, maxWeiboCount=100;
 		int currentPage=1, weiboCountPerPage=100;
-		try {
-			while (firstFlag || weiboCount < maxWeiboCount) {
-				if(firstFlag)firstFlag = false;
-				
-				StatusWapper statusWarpper = tm.getUserTimelineByName(screen_name, 
-				    		                 new Paging(currentPage, weiboCountPerPage), 0, 1);
-				for (Status s : statusWarpper.getStatuses()) {
-//					if(firstFlag){ 
-//						WeiboUserDAO.insert(s.getUser());
-//						firstFlag = false;
-//					}
-					weibo.setId(Long.parseLong(s.getId()));
-					weibo.setCreated_at(s.getCreatedAt());
-					weibo.setUser_id(Long.parseLong(s.getUser().getId()));
-					weibo.setRepost_count(s.getRepostsCount());
-					weibo.setComments_count(s.getCommentsCount());
-					weibo.setText(s.getText());
-				    WeiboDAO.insert(weibo);
+		int timeOutCount = 0;    //用来进行读取超时计数
+		while (timeOutCount <= 3 && weiboCount < maxWeiboCount) {    //若连续3次读取超时，则程序报错，否则重新读取
+			try {
+				while (firstFlag || weiboCount < maxWeiboCount) {
+					if (firstFlag)
+						firstFlag = false;
+
+					StatusWarpper statusWarpper;
+					statusWarpper = tm.getUserTimelineByName(screen_name, new Paging(currentPage,
+							weiboCountPerPage), 0, 1);
+					timeOutCount = 0;
+					// ***temporary for test
+					// FileOutputStream fs = new
+					// FileOutputStream("D:\\statusWarpper.ser");
+					// ObjectOutputStream os = new ObjectOutputStream(fs);
+					// os.writeObject(statusWarpper);
+					// ***test end
+					// ***temporary for test
+					// FileInputStream fins = new
+					// FileInputStream("D:\\statusWarpper.ser");
+					// ObjectInputStream ins = new ObjectInputStream(fins);
+					// statusWarpper = (StatusWarpper)ins.readObject();
+					// ***test end
+					for (Status s : statusWarpper.getStatuses()) {
+						// if(firstFlag){
+						// WeiboUserDAO.insert(s.getUser());
+						// firstFlag = false;
+						// }
+						weibo.setId(Long.parseLong(s.getId()));
+						weibo.setCreated_at(s.getCreatedAt());
+						weibo.setUser_id(Long.parseLong(s.getUser().getId()));
+						weibo.setRepost_count(s.getRepostsCount());
+						weibo.setComments_count(s.getCommentsCount());
+						weibo.setText(s.getText());
+						WeiboDAO.insert(weibo);
+					}
+					System.out.println(weibo.getText());
+					weiboCount += statusWarpper.getStatuses().size();
+					System.out.println("getTotalNumber" + statusWarpper.getTotalNumber());
+					maxWeiboCount = statusWarpper.getTotalNumber();
+					System.out.println("weibocount" + weiboCount);
+					++currentPage;
+					System.out.println("--------------------------------------");
+
 				}
-				weiboCount += statusWarpper.getStatuses().size();
-				System.out.println("getTotalNumber"+statusWarpper.getTotalNumber());
-				System.out.println("weibocount"+weiboCount);
-				++currentPage;
-				System.out.println("--------------------------------------");
-				
+			} catch (Exception e) {
+				if (!e.getMessage().equals("Read timed out")) {
+					timeOutCount = 4;
+					e.printStackTrace();
+				}
+				else
+					++ timeOutCount;
 			}
-		} catch (WeiboException e) {
-			e.printStackTrace();
 		}
 	}
 	
