@@ -44,7 +44,8 @@ public class MainServlet extends HttpServlet{
 			 * update user table here
 			 */
 			//WeiboUserDAO.insert(user);
-			updater.updateSpecificTimeline("大众中国");
+//			updater.updateSpecificTimeline("大众中国");
+			updater.updateSpecificTimeline("软件所_雨龙");
 		}catch(Exception e) {
 			throw new ServletException(e.getMessage());
 		}

@@ -47,7 +47,7 @@ public class TFMF {
 		List<String> statusList = WeiboDAO.getWeiboTextsByUserId(user_id);
 		total_weibos = statusList.size();
 		// 初始化分词器,将配置文件及Data及用户词典等放在该地址下
-		SplitWords.init("D:/Eclipse4.2_Workspace/apache-tomcat-7.0.20/webapps/SocialPie/WEB-INF/classes");
+		SplitWords.init("D:/GitHub_Repository/SocialPie/SocialPie/src");
 		for (String status : statusList) {
 			// 分词，标注词性，并获取名词
 			List<String> nounsList = SplitWords.split(status);
@@ -111,6 +111,7 @@ public class TFMF {
 	public static void main(String[] args) throws Exception {
 		// TODO Auto-generated method stub
 		process(1798750043);
+//		process(1772710110);
 	}
 
 }
