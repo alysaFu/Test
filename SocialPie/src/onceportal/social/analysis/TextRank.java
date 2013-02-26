@@ -114,16 +114,16 @@ public class TextRank {
 	}
 	
 	private void constructTextRankGraph(List<String> statusList) throws Exception{
-		// 初始化分词器,将配置文件及Data及用户词典等放在该地址下
+		// 初始化分词器,路径参数为配置文件及Data及用户词典的存放路径
 		SplitWords.init("D:/GitHub_Repository/SocialPie/SocialPie/src");
 		for (String status : statusList) {
-			// 分词，标注词性，并获取名词
-			List<String> nounsList = SplitWords.split(status);
-			for(String noun : nounsList) {
+			// 分词，标注词性
+			List<String> segList = SplitWords.split(status);
+			for(String noun : segList) {
 				graph.addWord(noun);
 			}
-			for(String noun_1 : nounsList) 
-				for(String noun_2 : nounsList) 
+			for(String noun_1 : segList) 
+				for(String noun_2 : segList) 
 					if(noun_1.compareTo(noun_2) < 0) {    //避免重复加边
 						graph.addEdge(noun_1, noun_2);
 					}
@@ -161,6 +161,7 @@ public class TextRank {
 	private void calTextRank() throws Exception{
 		this.calTextRank(0.85, 0.00001, 1024);
 	}
+	
 	public void process() throws Exception {
 		List<String> statusList = WeiboDAO.getWeiboTextsByUserId(userId);
 		constructTextRankGraph(statusList);
