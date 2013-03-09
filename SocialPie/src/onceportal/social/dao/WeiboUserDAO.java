@@ -11,6 +11,7 @@ import onceportal.social.bean.WeiboUser;
 import onceportal.social.util.DbManager;
 import onceportal.social.util.Parser;
 import weibo4j.model.User;
+import weibo4j.model.WeiboException;
 
 public class WeiboUserDAO {
 
@@ -199,9 +200,9 @@ public class WeiboUserDAO {
 		}
 	}
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws WeiboException{
 		System.out.println("start");
-		User user = new User();
+		User user = new User(null);
 		user.setId("123");
 		user.setScreenName("test");
 		user.setGender("m");

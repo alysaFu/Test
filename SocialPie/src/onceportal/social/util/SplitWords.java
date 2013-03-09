@@ -17,9 +17,10 @@ public class SplitWords {
 		//初始化
 		if (ictclas50.ICTCLAS_Init(argu.getBytes("utf-8")) == false)
 		{
-			System.out.println("Init Fail!");
+			System.out.println("分词器初始化失败！");
 			return false;
 		}
+		System.out.println("初始化分词器,请稍等...");
 		//设置词性标注集(0 计算所二级标注集，1 计算所一级标注集，2 北大二级标注集，3 北大一级标注集)
 		ictclas50.ICTCLAS_SetPOSmap(1);
 		//导入用户字典
@@ -30,7 +31,7 @@ public class SplitWords {
 		nCount = ictclas50.ICTCLAS_ImportUserDictFile(usrdirb, 0);
 		System.out.println("导入用户词个数" + nCount);
 		nCount = 0;
-		System.out.println("初始化分词器成功！");
+		System.out.println("分词器初始化成功！");
 		return true;
 	}
 	
@@ -48,10 +49,13 @@ public class SplitWords {
 			//分词结果
 			String nativeStr1 = new String(nativeBytes1, 0, nativeBytes1.length, "GB2312");
 			String[] words = nativeStr1.split(" ");
-			//过滤名词
+			//过滤只剩非单字名词
 			for(String word : words){
-				if(word.contains("/n"))
-					nouns.add(word.split("/n")[0]);
+				if(word.contains("/n")){
+					word = word.split("/n")[0];
+					if(word.length() < 2) continue;
+					nouns.add(word);
+				}
 			}
 			return nouns;
 		}catch (Exception ex){
@@ -69,9 +73,12 @@ public class SplitWords {
 	}
 	
 	public static void main(String[] args) throws UnsupportedEncodingException{
-		init("E:/apache-tomcat-7.0.20/wtpwebapps/SocialPie/WEB-INF/classes/");
-		split("百度一下,什么是效率");
-		split("在新浪微博上注册一个账号");
+		//Test
+		init("E:/apache-tomcat-7.0.20/data/ictclas");
+//		System.out.println(split("【管理层玩文字游戏 5月份也是6月底前！！！】  " +
+//				"http://t.cn/zYEmrdW  （分享自 @股吧秘闻）" +
+//				"反复试探市场的反应，想不让市场下跌，又着急着想发新股，纠结啊。").toString());
+		System.out.println(split("我们在小河上荡漾"));
 		exit();
 	}
 }

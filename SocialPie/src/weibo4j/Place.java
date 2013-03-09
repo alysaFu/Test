@@ -2,7 +2,7 @@ package weibo4j;
 
 import weibo4j.model.PostParameter;
 import weibo4j.model.Status;
-import weibo4j.model.StatusWapper;
+import weibo4j.model.StatusWarpper;
 import weibo4j.model.User;
 import weibo4j.model.WeiboException;
 import weibo4j.org.json.JSONObject;
@@ -21,7 +21,7 @@ public class Place extends Weibo{
 	 * 
 	 * 获取当前登录用户与其好友的位置动态 
 	 */
-	public StatusWapper friendsTimeLine () throws WeiboException {
+	public StatusWarpper friendsTimeLine () throws WeiboException {
 		return Status.constructWapperStatus(client.get(WeiboConfig.getValue("baseURL") + "place/friends_timeline.json"));
 	}
 	

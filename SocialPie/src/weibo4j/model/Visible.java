@@ -3,7 +3,7 @@ package weibo4j.model;
 import weibo4j.org.json.JSONException;
 import weibo4j.org.json.JSONObject;
 
-public class Visible {
+public class Visible  implements java.io.Serializable{
 	private int type;
 	private int list_id;
 	

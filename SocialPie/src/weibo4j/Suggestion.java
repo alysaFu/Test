@@ -3,7 +3,7 @@ package weibo4j;
 import weibo4j.model.Paging;
 import weibo4j.model.PostParameter;
 import weibo4j.model.Status;
-import weibo4j.model.StatusWapper;
+import weibo4j.model.StatusWarpper;
 import weibo4j.model.User;
 import weibo4j.model.UserWapper;
 import weibo4j.model.WeiboException;
@@ -90,13 +90,13 @@ public class Suggestion extends Weibo{
 	 *      href="http://open.weibo.com/wiki/2/suggestions/statuses/hot">suggestions/statuses/hot</a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper suggestionsStatusesHot(int type,int isPic) throws WeiboException{
+	public StatusWarpper suggestionsStatusesHot(int type,int isPic) throws WeiboException{
 		return Status.constructWapperStatus(client.get(WeiboConfig.getValue("baseURL")+"suggestions/statuses/hot.json",new PostParameter[]{
 			new PostParameter("type", type),
 			new PostParameter("is_pic", isPic)
 		}));
 	}
-	public StatusWapper suggestionsStatusesHot(int type,int isPic,Paging page) throws WeiboException{
+	public StatusWarpper suggestionsStatusesHot(int type,int isPic,Paging page) throws WeiboException{
 		return Status.constructWapperStatus(client.get(WeiboConfig.getValue("baseURL")+"suggestions/statuses/hot.json",new PostParameter[]{
 			new PostParameter("type", type),
 			new PostParameter("is_pic", isPic)

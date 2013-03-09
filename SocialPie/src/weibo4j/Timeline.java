@@ -6,7 +6,7 @@ import weibo4j.model.Emotion;
 import weibo4j.model.Paging;
 import weibo4j.model.PostParameter;
 import weibo4j.model.Status;
-import weibo4j.model.StatusWapper;
+import weibo4j.model.StatusWarpper;
 import weibo4j.model.WeiboException;
 import weibo4j.org.json.JSONArray;
 import weibo4j.org.json.JSONObject;
@@ -33,7 +33,7 @@ public class Timeline extends Weibo{
 	 *      </a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper getPublicTimeline() throws WeiboException {
+	public StatusWarpper getPublicTimeline() throws WeiboException {
 		return Status.constructWapperStatus(client.get(WeiboConfig
 				.getValue("baseURL") + "statuses/public_timeline.json"));
 	}
@@ -53,7 +53,7 @@ public class Timeline extends Weibo{
 	 *      </a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper getPublicTimeline(int count, int baseApp) throws WeiboException {
+	public StatusWarpper getPublicTimeline(int count, int baseApp) throws WeiboException {
 		return Status.constructWapperStatus(client.get(
 				WeiboConfig.getValue("baseURL") + "statuses/public_timeline.json", new PostParameter[] {
 						new PostParameter("count", count),
@@ -75,7 +75,7 @@ public class Timeline extends Weibo{
 	 *      statuses/friends_timeline </a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper getFriendsTimeline() throws WeiboException {
+	public StatusWarpper getFriendsTimeline() throws WeiboException {
 		return Status.constructWapperStatus(client.get(WeiboConfig.getValue("baseURL") + "statuses/friends_timeline.json"));
 
 	}
@@ -95,7 +95,7 @@ public class Timeline extends Weibo{
 	 *      statuses/friends_timeline </a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper getFriendsTimeline(Integer baseAPP, Integer feature,
+	public StatusWarpper getFriendsTimeline(Integer baseAPP, Integer feature,
 			Paging paging) throws WeiboException {
 		return Status.constructWapperStatus(client.get(
 				WeiboConfig.getValue("baseURL") + "statuses/friends_timeline.json",
@@ -143,7 +143,7 @@ public class Timeline extends Weibo{
 	 *      statuses/home_timeline </a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper getHomeTimeline() throws WeiboException {
+	public StatusWarpper getHomeTimeline() throws WeiboException {
 		return Status.constructWapperStatus(client.get(WeiboConfig
 				.getValue("baseURL") + "statuses/home_timeline.json"));
 
@@ -165,7 +165,7 @@ public class Timeline extends Weibo{
 	 *      statuses/home_timeline </a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper getHomeTimeline(Integer baseAPP, Integer feature,
+	public StatusWarpper getHomeTimeline(Integer baseAPP, Integer feature,
 			Paging paging) throws WeiboException {
 		return Status
 				.constructWapperStatus(client.get(
@@ -187,17 +187,17 @@ public class Timeline extends Weibo{
 	 *      href="http://open.weibo.com/wiki/2/statuses/user_timeline">statuses/user_timeline</a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper getUserTimeline() throws WeiboException {
+	public StatusWarpper getUserTimeline() throws WeiboException {
 		return Status.constructWapperStatus(client.get(WeiboConfig
 				.getValue("baseURL") + "statuses/user_timeline.json"));
 	}
-	public StatusWapper getUserTimelineByUid(String uid) throws WeiboException {
+	public StatusWarpper getUserTimelineByUid(String uid) throws WeiboException {
 		return Status.constructWapperStatus(client.get(WeiboConfig
 				.getValue("baseURL") + "statuses/user_timeline.json",new PostParameter[]{
 			new PostParameter("uid", uid)
 		}));
 	}
-	public StatusWapper getUserTimelineByName(String screen_name) throws WeiboException {
+	public StatusWarpper getUserTimelineByName(String screen_name) throws WeiboException {
 		return Status.constructWapperStatus(client.get(WeiboConfig
 				.getValue("baseURL") + "statuses/user_timeline.json",new PostParameter[]{
 			new PostParameter("screen_name", screen_name)
@@ -227,7 +227,7 @@ public class Timeline extends Weibo{
 	 *      href="http://open.weibo.com/wiki/2/statuses/user_timeline">statuses/user_timeline</a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper getUserTimelineByUid(String uid, Paging page,
+	public StatusWarpper getUserTimelineByUid(String uid, Paging page,
 			Integer base_app, Integer feature) throws WeiboException {
 		return Status.constructWapperStatus(client.get(
 						WeiboConfig.getValue("baseURL")	+ "statuses/user_timeline.json",
@@ -237,7 +237,7 @@ public class Timeline extends Weibo{
 								new PostParameter("feature", feature.toString()) },
 						page));
 	}
-	public StatusWapper getUserTimelineByName(String screen_name, Paging page,Integer base_app, Integer feature) throws WeiboException {
+	public StatusWarpper getUserTimelineByName(String screen_name, Paging page,Integer base_app, Integer feature) throws WeiboException {
 		return Status.constructWapperStatus(client.get(
 						WeiboConfig.getValue("baseURL")	+ "statuses/user_timeline.json",
 						new PostParameter[] {
@@ -280,7 +280,7 @@ public class Timeline extends Weibo{
 	 *      href="http://open.weibo.com/wiki/2/statuses/repost_timeline">statuses/repost_timeline</a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper getRepostTimeline(String id) throws WeiboException {
+	public StatusWarpper getRepostTimeline(String id) throws WeiboException {
 		return Status.constructWapperStatus(client.get(
 				WeiboConfig.getValue("baseURL")
 						+ "statuses/repost_timeline.json",
@@ -304,7 +304,7 @@ public class Timeline extends Weibo{
 	 *      href="http://open.weibo.com/wiki/2/statuses/repost_timeline">statuses/repost_timeline</a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper getRepostTimeline(String id, Paging page)
+	public StatusWarpper getRepostTimeline(String id, Paging page)
 			throws WeiboException {
 		return Status.constructWapperStatus(client.get(
 				WeiboConfig.getValue("baseURL")
@@ -340,7 +340,7 @@ public class Timeline extends Weibo{
 	 *      href="http://open.weibo.com/wiki/2/statuses/repost_by_me">statuses/repost_by_me</a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper getRepostByMe() throws WeiboException {
+	public StatusWarpper getRepostByMe() throws WeiboException {
 		return Status.constructWapperStatus(client.get(WeiboConfig
 				.getValue("baseURL") + "statuses/repost_by_me.json"));
 	}
@@ -358,7 +358,7 @@ public class Timeline extends Weibo{
 	 *      href="http://open.weibo.com/wiki/2/statuses/repost_by_me">statuses/repost_by_me</a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper getRepostByMe(Paging page) throws WeiboException {
+	public StatusWarpper getRepostByMe(Paging page) throws WeiboException {
 		return Status.constructWapperStatus(client.get(
 				WeiboConfig.getValue("baseURL") + "statuses/repost_by_me.json",null, page));
 	}
@@ -374,7 +374,7 @@ public class Timeline extends Weibo{
 	 *      href="http://open.weibo.com/wiki/2/statuses/mentions">statuses/mentions</a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper getMentions() throws WeiboException {
+	public StatusWarpper getMentions() throws WeiboException {
 		return Status.constructWapperStatus(client.get(WeiboConfig
 				.getValue("baseURL") + "statuses/mentions.json"));
 	}
@@ -400,7 +400,7 @@ public class Timeline extends Weibo{
 	 *      href="http://open.weibo.com/wiki/2/statuses/mentions">statuses/mentions</a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper getMentions(Paging page, Integer filter_by_author,
+	public StatusWarpper getMentions(Paging page, Integer filter_by_author,
 			Integer filter_by_source, Integer filter_by_type)
 			throws WeiboException {
 		return Status.constructWapperStatus(client.get(
@@ -446,10 +446,10 @@ public class Timeline extends Weibo{
 	 *      href="http://open.weibo.com/wiki/2/statuses/bilateral_timeline">statuses/bilateral_timeline</a>
 	 * @since JDK 1.5
 	 */
-	public StatusWapper getBilateralTimeline() throws WeiboException{
+	public StatusWarpper getBilateralTimeline() throws WeiboException{
 		return Status.constructWapperStatus(client.get(WeiboConfig.getValue("baseURL")+"statuses/bilateral_timeline.json"));
 	}
-	public StatusWapper getBilateralTimeline(Integer base_app,Integer feature) throws WeiboException{
+	public StatusWarpper getBilateralTimeline(Integer base_app,Integer feature) throws WeiboException{
 		return Status.constructWapperStatus(client.get(WeiboConfig.getValue("baseURL")+"statuses/bilateral_timeline.json",
 				new PostParameter[]{
 			new PostParameter("base_app", base_app),
